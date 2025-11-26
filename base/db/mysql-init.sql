@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS kir_server_db;
+CREATE USER IF NOT EXISTS 'linemachine'@'%' IDENTIFIED BY '1234fast';
+GRANT ALL PRIVILEGES ON kir_server_db.* TO 'linemachine'@'%';
+FLUSH PRIVILEGES;
