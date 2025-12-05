@@ -1,0 +1,10 @@
+# mms-backend-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mms-backendemail-config
+  namespace: machine-monitoring
+data:
+  # Mail server details (non-sensitive configuration)
+  MAIL_HOST: smtp.gmail.com
+  MAIL_PORT: "587"

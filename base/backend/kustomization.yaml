@@ -1,0 +1,5 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+# Optional: add namespace here if you want to enforce namespace
+namespace: machine-monitoring
