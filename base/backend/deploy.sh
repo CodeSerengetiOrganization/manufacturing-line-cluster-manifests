@@ -12,8 +12,14 @@ echo "=== Step 1: Apply GitHub registry secret ==="
 kubectl apply -f mms-backend-ghcr-secret.yaml -n $NAMESPACE
 kubectl apply -f mms-backend-email-secret.yaml -n $NAMESPACE
 
-echo "=== Step 1.5: Apply configmap ==="
-kubectl apply -f mms-backend-configmap.yaml -n $NAMESPACE
+echo "=== Step 1.5: Apply Email related configmap ==="
+kubectl apply -f mms-backend-email-config.yaml -n $NAMESPACE
+
+echo "=== Step 1.6: Apply DataSource related configmap ==="
+kubectl apply -f mms-backend-db-config.yaml -n $NAMESPACE
+
+echo "=== Step 1.7: Apply DataSource related secret ==="
+kubectl apply -f mms-backend-db-secret.yaml -n $NAMESPACE
 
 echo "=== Step 2: Apply Kubernetes manifests (kustomize) ==="
 kubectl apply -k . -n $NAMESPACE

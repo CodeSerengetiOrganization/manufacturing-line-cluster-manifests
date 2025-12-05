@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mms-backendemail-config
+  name: mms-backende-mail-config
   namespace: machine-monitoring
 data:
   # Mail server details (non-sensitive configuration)

@@ -27,13 +27,20 @@ spec:
               cpu: "500m"
           env:
             - name: SPRING_DATASOURCE_URL
-              # CHANGE THIS LINE to use the special Minikube hostname
-              # value: jdbc:mysql://**host.minikube.internal:3306**/kir_server_db?serverTimezone=UTC
-              value: jdbc:mysql://mysql:3306/kir_server_db?serverTimezone=UTC
+              valueFrom:
+                configMapKeyRef:
+                  name: mms-backend-db-config
+                  key: SPRING_DATASOURCE_URL
             - name: SPRING_DATASOURCE_USERNAME
-              value: linemachine
+              valueFrom:
+                secretKeyRef:
+                  name: mms-backend-db-secret
+                  key: SPRING_DATASOURCE_USERNAME
             - name: SPRING_DATASOURCE_PASSWORD
-              value: 1234fast
+              valueFrom:
+                secretKeyRef:
+                  name: mms-backend-db-secret
+                  key: SPRING_DATASOURCE_PASSWORD
 
             # Reference the username from the new Secret
             - name: MAIL_USERNAME
