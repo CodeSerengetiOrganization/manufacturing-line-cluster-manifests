@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: machine-monitoring
+  labels:
+    environment: dev
+    team: monitoring
