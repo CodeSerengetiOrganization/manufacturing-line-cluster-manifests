@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0.21
+          ports:
+            - containerPort: 3306
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              # value: tempRootPwd123    # temporary, just so container can start
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            # - name: MYSQL_DATABASE
+            #   value: linemachine_db
+            # - name: MYSQL_USER
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: mysql-secret
+            #       key: mysql-user
+            # - name: MYSQL_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: mysql-secret
+            #       key: mysql-password
+            # - name: MYSQL_RANDOM_ROOT_PASSWORD
+            #   value: "true"
+
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+            - name: mysql-initdb-volume
+              mountPath: /docker-entrypoint-initdb.d
+              # subPath: mysql-init.sql
+      volumes:
+        - name: mysql-storage
+          emptyDir: {}
+        - name: mysql-initdb-volume
+          configMap:
+            name: mysql-initdb-config
+            items:
+            - key: mysql-init.sql
+              path: mysql-init.sql
