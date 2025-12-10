@@ -42,14 +42,14 @@ spec:
                   name: mms-backend-db-secret
                   key: SPRING_DATASOURCE_PASSWORD
 
-            # Reference the username from the new Secret
+            # Reference the username from the email Secret
             - name: MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: mms-backendemail-creds
                   key: MAIL_USERNAME
   
-            # Reference the password from the new Secret
+            # Reference the password from the email Secret
             - name: MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
