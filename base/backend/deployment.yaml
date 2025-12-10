@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mms-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mms-backend
+  template:
+    metadata:
+      labels:
+        app: mms-backend
+    spec:
+      containers:
+        - name: mms-backend
+          image: ghcr.io/codeserengetiorganization/mms-backend:1.0.0-SNAPSHOT           
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mms-backend-db-config
+                  key: SPRING_DATASOURCE_URL
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mms-backend-db-secret
+                  key: SPRING_DATASOURCE_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mms-backend-db-secret
+                  key: SPRING_DATASOURCE_PASSWORD
+
+            # Reference the username from the new Secret
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mms-backendemail-creds
+                  key: MAIL_USERNAME
+  
+            # Reference the password from the new Secret
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mms-backendemail-creds
+                  key: MAIL_PASSWORD
+      imagePullSecrets:
+        - name: mms-backend-ghcr-secret # <--- Must exactly match the Secret name 
