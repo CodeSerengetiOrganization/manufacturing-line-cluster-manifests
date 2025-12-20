@@ -9,4 +9,4 @@ spec:
   ports:
     - port: 8080
       targetPort: 8080
-      nodePort: 30080   # exposed port on your laptop
+      nodePort: 30081   # exposed port on your laptop
