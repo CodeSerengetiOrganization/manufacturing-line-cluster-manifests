@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mms-frontend
+  labels:
+    app: angular-frontend
+spec:
+  replicas: 1 # Start with 1 pod (instance)
+  selector:
+    matchLabels:
+      app: angular-frontend
+  template:
+    metadata:
+      labels:
+        app: angular-frontend # Important: The service will select pods with this label
+    spec:
+      imagePullSecrets:
+      - name: mms-backend-ghcr-secret
+      containers:
+      - name: angular-frontend
+        image: ghcr.io/your-org/angular-frontend:1.0.0-dev # Use the GHCR path palce holder. Will be replaced by deploy-frontend.sh
+        imagePullPolicy: Always  # Force pull even if tag is unchanged
+        ports:
+        - containerPort: 80 # Matches the EXPOSE 80 in the Dockerfile
