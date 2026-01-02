@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: machine-monitoring
+
+# Kafka topic resources
+# Apply this after Kafka cluster is ready
+resources:
+  - eol-raw-data-topic.yaml
+  - eol-test-alerts-topic.yaml
+
