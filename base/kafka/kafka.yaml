@@ -1,0 +1,43 @@
+apiVersion: kafka.strimzi.io/v1
+kind: Kafka
+metadata:
+  name: kafka
+  namespace: machine-monitoring
+  labels:
+    app: kafka
+  annotations:
+    # Enable KRaft mode (no Zookeeper needed)
+    strimzi.io/kraft: "enabled"
+    strimzi.io/node-pools: "enabled"
+spec:
+  # Kafka version - must match Strimzi operator's supported versions
+  # Your operator supports: [4.0.0, 4.0.1, 4.1.0, 4.1.1]
+  # KRaft mode requires Kafka 3.3.0+ (4.0.0 is fully compatible)
+  kafka:
+    version: 4.0.0  # Updated to match Strimzi operator's supported versions
+    # Note: replicas are defined in KafkaNodePool, not here in KRaft mode
+    
+    # Kafka configuration overrides
+    config:
+      log.retention.hours: "168"  # 7 days retention
+      log.segment.bytes: "1073741824"  # 1GB segments
+      num.network.threads: "8"
+      num.io.threads: "8"
+    
+    # Listeners - plaintext for development (no authentication)
+    # To disable authentication, simply omit the authentication section
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+        # No authentication section = no authentication (plaintext)
+  
+  # Entity Operator (optional - manages topics and users)
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+  
+  # Note: In KRaft mode, Zookeeper section should be completely omitted
+  # The strimzi.io/kraft annotation tells Strimzi to run in KRaft mode
+

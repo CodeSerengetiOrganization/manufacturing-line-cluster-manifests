@@ -1,0 +1,29 @@
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaNodePool
+metadata:
+  name: kafka-broker
+  namespace: machine-monitoring
+  labels:
+    app: kafka
+    # Link this node pool to the Kafka cluster named "kafka"
+    strimzi.io/cluster: kafka
+spec:
+  replicas: 1  # Single node for development
+  roles:
+    - broker
+    - controller  # Combined broker+controller for single-node KRaft setup
+  
+  # Storage configuration
+  storage:
+    type: persistent-claim
+    size: 10Gi
+    class: local-path
+  
+  # Resource limits
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+    limits:
+      memory: 1024Mi
+      cpu: 500m
