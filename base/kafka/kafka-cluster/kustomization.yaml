@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: machine-monitoring
+
+# Kafka cluster resources (Kafka CRD and KafkaNodePool)
+# Apply this first, then wait for cluster to be ready before applying topics
+resources:
+  - kafka.yaml
+  - kafka-node-pool.yaml
+

@@ -110,11 +110,9 @@ else
     echo "✓ Storage class '${STORAGE_CLASS}' found"
 fi
 
-# Apply Kafka CRD and Node Pool (required for KRaft mode)
-echo "Applying Kafka custom resource (KRaft mode)..."
-kubectl apply -f "${KAFKA_DIR}/kafka.yaml"
-echo "Applying KafkaNodePool (defines broker/controller nodes)..."
-kubectl apply -f "${KAFKA_DIR}/kafka-node-pool.yaml"
+# Apply Kafka cluster resources using kustomize
+echo "Applying Kafka cluster resources (Kafka CRD and KafkaNodePool)..."
+kubectl apply -k "${KAFKA_DIR}/kafka-cluster"
 
 # Wait for Kafka cluster to be ready
 echo "Waiting for Kafka cluster to become ready..."
@@ -122,10 +120,10 @@ echo "This may take a few minutes..."
 
 # Wait for Kafka resource to be ready
 kubectl wait --for=condition=Ready kafka/kafka \
-    --timeout=420s \
+    --timeout=180s \
     --namespace="${NAMESPACE}" || {
     echo ""
-    echo "WARNING: Kafka cluster did not become ready within 7 minutes"
+    echo "WARNING: Kafka cluster did not become ready within 3 minutes"
     echo ""
     echo "Checking Kafka cluster status..."
     kubectl get kafka -n "${NAMESPACE}"
@@ -140,6 +138,12 @@ kubectl wait --for=condition=Ready kafka/kafka \
     echo "  kubectl logs -l strimzi.io/cluster=kafka -n ${NAMESPACE}"
     exit 1
 }
+
+# Apply Kafka topics using kustomize (now that cluster is ready)
+echo ""
+echo "Applying Kafka topics..."
+kubectl apply -k "${KAFKA_DIR}/topics"
+echo "✓ Topics applied (Topic Operator will create them in the cluster)"
 
 # Step 3: Verify deployment
 echo ""
@@ -157,6 +161,10 @@ kubectl get svc -n "${NAMESPACE}" -l strimzi.io/cluster=kafka
 echo ""
 echo "Kafka Cluster Status:"
 kubectl get kafka -n "${NAMESPACE}"
+
+echo ""
+echo "Kafka Topics Status:"
+kubectl get kafkatopic -n "${NAMESPACE}"
 
 # Step 4: Display connection information
 echo ""
@@ -181,4 +189,14 @@ echo "  kubectl logs -l strimzi.io/cluster=kafka -n ${NAMESPACE}"
 echo ""
 echo "To describe Kafka cluster:"
 echo "  kubectl describe kafka kafka -n ${NAMESPACE}"
+echo ""
+echo "To check Kafka topics:"
+echo "  kubectl get kafkatopic -n ${NAMESPACE}"
+echo ""
+echo "To describe Kafka topics:"
+echo "  kubectl describe kafkatopic eol-raw-data -n ${NAMESPACE}"
+echo "  kubectl describe kafkatopic eol-test-alerts -n ${NAMESPACE}"
+echo ""
+echo "To verify topics comprehensively (CRD + Broker level):"
+echo "  ./verify-topics.sh"
 echo ""
