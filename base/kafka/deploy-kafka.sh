@@ -1,3 +1,7 @@
+### Very Important Note ###
+# This file has an issue, if run this file and it only create the Kafka server but no kafka topics,
+# you need to manually create topics by apply all the files in `topics` folder.
+# the reason is: when the command line to create topics, the kafka server is not yet ready.
 #!/bin/bash
 set -e  # Exit immediately if any command fails
 
@@ -5,7 +9,10 @@ set -e  # Exit immediately if any command fails
 NAMESPACE="machine-monitoring"
 KAFKA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STRIMZI_NAMESPACE="strimzi"
+# Helm release name (used by helm upgrade/install and cleanup-kafka.sh helm uninstall)
 STRIMZI_OPERATOR_NAME="strimzi-kafka-operator"
+# Deployment name created by the Strimzi Helm chart (used for "already installed" and readiness checks)
+STRIMZI_CLUSTER_OPERATOR_DEPLOYMENT="strimzi-cluster-operator"
 
 echo "--- Starting Kafka Deployment with Strimzi Operator (KRaft Mode) ---"
 echo "Note: Ensure namespace '${NAMESPACE}' is created via base/namespace/namespace-machine-monitoring.yaml"
@@ -15,8 +22,8 @@ echo ""
 echo "Step 1: Installing Strimzi Cluster Operator..."
 echo "================================================"
 
-# Check if Strimzi operator is already installed
-if kubectl get deployment "${STRIMZI_OPERATOR_NAME}" -n "${STRIMZI_NAMESPACE}" >/dev/null 2>&1; then
+# Check if Strimzi operator is already installed (chart creates Deployment named strimzi-cluster-operator)
+if kubectl get deployment "${STRIMZI_CLUSTER_OPERATOR_DEPLOYMENT}" -n "${STRIMZI_NAMESPACE}" >/dev/null 2>&1; then
     echo "Strimzi operator already installed in namespace '${STRIMZI_NAMESPACE}'"
 else
     echo "Installing Strimzi Cluster Operator..."
@@ -44,10 +51,10 @@ else
     echo "Waiting for Strimzi operator to be ready..."
     echo "This may take a few minutes..."
     
-    # Wait for deployment to exist first
+    # Wait for deployment to exist first (chart creates strimzi-cluster-operator)
     echo "Waiting for deployment to be created..."
     for i in {1..30}; do
-        if kubectl get deployment "${STRIMZI_OPERATOR_NAME}" -n "${STRIMZI_NAMESPACE}" >/dev/null 2>&1; then
+        if kubectl get deployment "${STRIMZI_CLUSTER_OPERATOR_DEPLOYMENT}" -n "${STRIMZI_NAMESPACE}" >/dev/null 2>&1; then
             break
         fi
         sleep 2
@@ -62,7 +69,7 @@ else
         echo "WARNING: Strimzi operator did not become ready within 5 minutes"
         echo ""
         echo "Checking operator deployment status..."
-        kubectl get deployment "${STRIMZI_OPERATOR_NAME}" -n "${STRIMZI_NAMESPACE}" || true
+        kubectl get deployment "${STRIMZI_CLUSTER_OPERATOR_DEPLOYMENT}" -n "${STRIMZI_NAMESPACE}" || true
         echo ""
         echo "Checking operator pods..."
         kubectl get pods -n "${STRIMZI_NAMESPACE}" -l name=strimzi-cluster-operator || true

@@ -1,0 +1,15 @@
+{
+    "eventType": "manufacturing_complex",
+    "barcode": "SN-20250215-002",
+    "productCode": 1001,
+    "stationCode": 301,
+    "stationChannelNo": 1,
+    "result": 1,
+    "testResults": {
+        "Power_Voltage": 12.2,
+        "Static_Current": 0.002
+    },
+    "operator": "OP02",
+    "startTime": "2025-02-15T10:05:00Z",
+    "endTime": "2025-02-15T10:05:30Z"
+}

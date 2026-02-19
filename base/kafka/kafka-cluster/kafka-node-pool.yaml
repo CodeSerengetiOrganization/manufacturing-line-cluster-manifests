@@ -15,11 +15,10 @@ spec:
   
   # Storage configuration
   storage:
-    # type: ephemeral
-  type: persistent-claim  # Critical for manufacturing compliance
-  size: 20Gi              # Adjust based on production volume
-  class: local-path       # K3s default, perfect for single-node
-  deleteClaim: false      # Never auto-delete production data
+    type: persistent-claim  # Critical for manufacturing compliance
+    size: 20Gi              # Adjust based on production volume
+    class: local-path       # K3s default, perfect for single-node
+    deleteClaim: false      # Never auto-delete production data
   
   # Resource limits
   resources:
