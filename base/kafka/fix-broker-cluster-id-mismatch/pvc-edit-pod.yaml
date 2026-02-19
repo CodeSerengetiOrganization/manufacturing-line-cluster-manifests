@@ -1,0 +1,21 @@
+# One-off pod to mount the Kafka broker PVC and edit meta.properties.
+# Used by fix-broker-cluster-id.sh when fixing "Invalid cluster.id" mismatch
+# (e.g. after cluster recreation with the same PVC).
+# Run from base/kafka/ with: kubectl apply -f pvc-edit-pod.yaml -n machine-monitoring
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-edit
+  namespace: machine-monitoring
+spec:
+  containers:
+  - name: edit
+    image: quay.io/strimzi/kafka:0.50.0-kafka-4.0.0
+    command: ["sleep", "3600"]
+    volumeMounts:
+    - name: data
+      mountPath: /var/lib/kafka/data
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: data-kafka-kafka-broker-0
