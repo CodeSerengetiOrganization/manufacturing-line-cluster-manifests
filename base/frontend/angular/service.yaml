@@ -10,4 +10,4 @@ spec:
     - protocol: TCP
       port: 80 # Port the service itself listens on (internal cluster port)
       targetPort: 80 # Port on the container to forward traffic to (Nginx)
-      nodePort: 30080 # Optional: You can specify a port (must be between 30000-32767)
+      nodePort: 30080 # Angular frontend (must be between 30000-32767)

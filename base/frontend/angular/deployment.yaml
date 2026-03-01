@@ -18,7 +18,7 @@ spec:
       - name: mms-backend-ghcr-secret
       containers:
       - name: angular-frontend
-        image: ghcr.io/your-org/angular-frontend:1.0.0-dev # Use the GHCR path palce holder. Will be replaced by deploy-frontend.sh
+        image: ghcr.io/your-org/angular-frontend:1.0.0-dev # Placeholder. Replaced by deploy-frontend.sh
         imagePullPolicy: Always  # Force pull even if tag is unchanged
         ports:
         - containerPort: 80 # Matches the EXPOSE 80 in the Dockerfile
