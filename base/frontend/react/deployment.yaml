@@ -20,5 +20,8 @@ spec:
       - name: react-frontend
         image: ghcr.io/your-org/react-frontend:1.0.0-dev # Placeholder. Replaced by deploy-frontend.sh
         imagePullPolicy: Always
+        env:
+        - name: NODE_ENV
+          value: "prod"
         ports:
         - containerPort: 80
