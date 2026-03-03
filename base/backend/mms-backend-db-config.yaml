@@ -4,3 +4,4 @@ metadata:
   name: mms-backend-db-config
 data:
   SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/kir_server_db?serverTimezone=UTC
+  SPRING_PROFILES_ACTIVE: dev

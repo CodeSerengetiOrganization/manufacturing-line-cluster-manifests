@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mms-frontend-react
+  labels:
+    app: react-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-frontend
+  template:
+    metadata:
+      labels:
+        app: react-frontend
+    spec:
+      imagePullSecrets:
+      - name: mms-backend-ghcr-secret
+      containers:
+      - name: react-frontend
+        image: ghcr.io/your-org/react-frontend:1.0.0-dev # Placeholder. Replaced by deploy-frontend.sh
+        imagePullPolicy: Always
+        env:
+        - name: NODE_ENV
+          value: "prod"
+        ports:
+        - containerPort: 80
