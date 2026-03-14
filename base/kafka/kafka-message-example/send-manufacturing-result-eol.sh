@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Send example manufacturing-result JSON message(s) to topic eol-raw-data in k3s Kafka.
+# Send example manufacturing-result JSON message(s) to topic manufacturing-results-topic in k3s Kafka.
 # Usage:
 #   ./send-eol-raw-data-example.sh                    # send one simple + one complex example
 #   ./send-eol-raw-data-example.sh path/to/file.json  # send messages from file (one JSON object per line)
@@ -7,7 +7,7 @@
 set -euo pipefail
 
 NAMESPACE="${KAFKA_NAMESPACE:-machine-monitoring}"
-TOPIC="${KAFKA_TOPIC:-eol-raw-data}"
+TOPIC="${KAFKA_TOPIC:-manufacturing-results-topic}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Find first Kafka broker pod (Strimzi KRaft: kafka-kafka-broker-0; exclude entity-operator)
@@ -38,6 +38,6 @@ if [[ -n "${1:-}" ]]; then
   (cat "$1"; echo) | send_messages
 else
   echo "Sending example messages (simple + complex) to topic $TOPIC (pod $KAFKA_POD)..."
-  (cat "$SCRIPT_DIR/eol-raw-data-example-simple.json" "$SCRIPT_DIR/eol-raw-data-example-complex.json"; echo) | send_messages
+  (cat "$SCRIPT_DIR/manufacturing-result-eol-simple.json" "$SCRIPT_DIR/manufacturing-result-eol-complex.json"; echo) | send_messages
 fi
 echo "Done."
