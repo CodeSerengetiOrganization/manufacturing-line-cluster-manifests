@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Consume messages from eol-raw-data topic in k3s Kafka (for checking/debugging).
+# Consume messages from manufacturing-results-topic in k3s Kafka (for checking/debugging).
 # Usage:
-#   ./consume-eol-raw-data.sh           # consume from latest (new messages only)
-#   ./consume-eol-raw-data.sh --from-beginning   # consume all messages from start
+#   ./consume-manufacturing-results.sh           # consume from latest (new messages only)
+#   ./consume-manufacturing-results.sh --from-beginning   # consume all messages from start
 
 set -euo pipefail
 
 NAMESPACE="${KAFKA_NAMESPACE:-machine-monitoring}"
-TOPIC="${KAFKA_TOPIC:-eol-raw-data}"
+TOPIC="${KAFKA_TOPIC:-manufacturing-results-topic}"
 
 # Find first Kafka broker pod (Strimzi KRaft: kafka-kafka-broker-0; exclude entity-operator)
 KAFKA_POD=$(kubectl get pods -n "$NAMESPACE" -l strimzi.io/cluster=kafka,strimzi.io/controller-name=kafka-kafka-broker -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || true)

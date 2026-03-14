@@ -1,15 +1,15 @@
-# Example messages for `eol-raw-data` topic
+# Example messages for `manufacturing-results-topic`
 
-Example JSON messages conforming to the [manufacturing-result schema](../../src/main/resources/event-schemas/v1/manufacturing-result.json).
+Example JSON messages for the manufacturing-result event schema (PLC/edge pass-fail and EOL tester with test items).
 
 ## Files
 
 | File | Description |
 |------|-------------|
-| `eol-raw-data-example-simple.json` | One `manufacturing_simple` event (PLC/edge pass-fail). |
-| `eol-raw-data-example-complex.json` | One `manufacturing_complex` event (EOL tester with test items). |
-| `send-eol-raw-data-example.sh` | Script to produce these (or a custom file) to Kafka in the k3s cluster. |
-| `consume-eol-raw-data.sh` | Script to consume (read) messages from the topic for checking. |
+| `manufacturing-result-eol-simple.json` | One `manufacturing_simple` event (PLC/edge pass-fail). |
+| `manufacturing-result-eol-complex.json` | One `manufacturing_complex` event (EOL tester with test items). |
+| `send-eol-raw-data-example.sh` | Produce these examples (or a custom file) to `manufacturing-results-topic` in the k3s cluster. |
+| `consume-eol-raw-data.sh` | Consume messages from `manufacturing-results-topic` for checking. |
 
 ## Sending to Kafka in k3s
 
@@ -27,10 +27,10 @@ Prerequisites: `kubectl` configured for your k3s cluster and the Kafka cluster r
 
 **Override namespace or topic:**
 ```bash
-KAFKA_NAMESPACE=machine-monitoring KAFKA_TOPIC=eol-raw-data ./send-eol-raw-data-example.sh
+KAFKA_NAMESPACE=machine-monitoring KAFKA_TOPIC=manufacturing-results-topic ./send-eol-raw-data-example.sh
 ```
 
-The script finds a Kafka broker pod in the namespace and runs `kafka-console-producer` inside it to produce to `eol-raw-data`.
+The script finds a Kafka broker pod in the namespace and runs `kafka-console-producer` inside it to produce to `manufacturing-results-topic`.
 
 ## Checking messages in Kafka
 
@@ -53,7 +53,7 @@ KAFKA_POD=$(kubectl get pods -n machine-monitoring -l strimzi.io/cluster=kafka,s
 kubectl exec -it -n machine-monitoring $KAFKA_POD -c kafka -- \
   bin/kafka-console-consumer.sh \
   --bootstrap-server localhost:9092 \
-  --topic eol-raw-data \
+  --topic manufacturing-results-topic \
   --from-beginning
 ```
 
@@ -73,6 +73,6 @@ Omit `--from-beginning` to read only new messages.
    ```bash
    KAFKA_POD=$(kubectl get pods -n machine-monitoring -l strimzi.io/cluster=kafka,strimzi.io/controller-name=kafka-kafka-broker -o jsonpath='{.items[0].metadata.name}')
    kubectl exec -it -n machine-monitoring $KAFKA_POD -c kafka -- \
-     bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic eol-raw-data --from-beginning
+     bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic manufacturing-results-topic --from-beginning
    ```
    You should see the two example JSON messages; press Ctrl+C to stop.

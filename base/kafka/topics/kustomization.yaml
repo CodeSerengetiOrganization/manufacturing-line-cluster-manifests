@@ -6,6 +6,6 @@ namespace: machine-monitoring
 # Kafka topic resources
 # Apply this after Kafka cluster is ready
 resources:
-  - eol-raw-data-topic.yaml
-  - eol-test-alerts-topic.yaml
+  - manufacturing-results-topic.yaml
+  - manufacturing-failures-topic.yaml
 

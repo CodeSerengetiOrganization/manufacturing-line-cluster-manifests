@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1
 kind: KafkaTopic
 metadata:
-  name: eol-test-alerts
+  name: manufacturing-results-topic
   namespace: machine-monitoring
   labels:
     strimzi.io/cluster: kafka
@@ -9,6 +9,6 @@ spec:
   partitions: 3
   replicas: 1
   config:
-    retention.ms: 2592000000  # 30 days (30 * 24 * 60 * 60 * 1000)
+    retention.ms: 172800000  # 48 hours (48 * 60 * 60 * 1000)
     cleanup.policy: delete
 

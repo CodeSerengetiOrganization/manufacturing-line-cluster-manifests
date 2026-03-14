@@ -127,7 +127,7 @@ echo "This may take a few minutes..."
 
 # Wait for Kafka resource to be ready
 kubectl wait --for=condition=Ready kafka/kafka \
-    --timeout=180s \
+    --timeout=300s \
     --namespace="${NAMESPACE}" || {
     echo ""
     echo "WARNING: Kafka cluster did not become ready within 3 minutes"
@@ -201,8 +201,8 @@ echo "To check Kafka topics:"
 echo "  kubectl get kafkatopic -n ${NAMESPACE}"
 echo ""
 echo "To describe Kafka topics:"
-echo "  kubectl describe kafkatopic eol-raw-data -n ${NAMESPACE}"
-echo "  kubectl describe kafkatopic eol-test-alerts -n ${NAMESPACE}"
+echo "  kubectl describe kafkatopic manufacturing-results-topic -n ${NAMESPACE}"
+echo "  kubectl describe kafkatopic manufacturing-failures-topic -n ${NAMESPACE}"
 echo ""
 echo "To verify topics comprehensively (CRD + Broker level):"
 echo "  ./verify-topics.sh"

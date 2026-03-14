@@ -14,7 +14,7 @@ spec:
   # Your operator supports: [4.0.0, 4.0.1, 4.1.0, 4.1.1]
   # KRaft mode requires Kafka 3.3.0+ (4.0.0 is fully compatible)
   kafka:
-    version: 4.0.0  # Updated to match Strimzi operator's supported versions
+    version: 4.1.0  # Updated to match Strimzi operator's supported versions
     # Note: replicas are defined in KafkaNodePool, not here in KRaft mode
     
     # Kafka configuration overrides
