@@ -7,5 +7,5 @@ namespace: machine-monitoring
 # Apply this after Kafka cluster is ready
 resources:
   - manufacturing-results-topic.yaml
-  - manufacturing-failures-topic.yaml
+  - mes.failed-product.batch.v1.yaml
 

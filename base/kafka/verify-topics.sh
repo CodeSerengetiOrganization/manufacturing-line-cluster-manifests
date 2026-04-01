@@ -22,8 +22,7 @@ echo "Detailed topic information:"
 echo "---"
 kubectl describe kafkatopic manufacturing-results-topic -n "${NAMESPACE}"
 echo ""
-kubectl describe kafkatopic manufacturing-failures-topic -n "${NAMESPACE}"
-
+kubectl describe kafkatopic mes.failed-product.batch.v1 -n "${NAMESPACE}"
 echo ""
 echo "✓ Level 1 (CRD) Verification Complete"
 echo ""
@@ -62,11 +61,11 @@ kubectl exec "$KAFKA_BROKER_POD" -n "${NAMESPACE}" -c kafka -- \
     --entity-type topics --entity-name manufacturing-results-topic --describe 2>/dev/null | grep -E "(retention|cleanup)" || echo "Warning: Could not retrieve configuration"
 
 echo ""
-echo "Verifying manufacturing-failures-topic retention settings (expected: 2592000000 ms = 30 days):"
+echo "Verifying mes.failed-product.batch.v1 retention settings (expected: 172800000 ms = 48 hours):"
 echo "---"
 kubectl exec "$KAFKA_BROKER_POD" -n "${NAMESPACE}" -c kafka -- \
     bin/kafka-configs.sh --bootstrap-server localhost:9092 \
-    --entity-type topics --entity-name manufacturing-failures-topic --describe 2>/dev/null | grep -E "(retention|cleanup)" || echo "Warning: Could not retrieve configuration"
+    --entity-type topics --entity-name mes.failed-product.batch.v1 --describe 2>/dev/null | grep -E "(retention|cleanup)" || echo "Warning: Could not retrieve configuration"
 
 echo ""
 echo "✓ Level 2 (Broker) Verification Complete"
