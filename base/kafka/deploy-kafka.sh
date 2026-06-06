@@ -8,6 +8,8 @@ set -e  # Exit immediately if any command fails
 # --- Configuration ---
 NAMESPACE="machine-monitoring"
 KAFKA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${KAFKA_DIR}/../.." && pwd)"
+NAMESPACE_MANIFEST="${REPO_ROOT}/namespaces/namespace-machine-monitoring.yaml"
 STRIMZI_NAMESPACE="strimzi"
 # Helm release name (used by helm upgrade/install and cleanup-kafka.sh helm uninstall)
 STRIMZI_OPERATOR_NAME="strimzi-kafka-operator"
@@ -15,7 +17,7 @@ STRIMZI_OPERATOR_NAME="strimzi-kafka-operator"
 STRIMZI_CLUSTER_OPERATOR_DEPLOYMENT="strimzi-cluster-operator"
 
 echo "--- Starting Kafka Deployment with Strimzi Operator (KRaft Mode) ---"
-echo "Note: Ensure namespace '${NAMESPACE}' is created via base/namespace/namespace-machine-monitoring.yaml"
+echo "Note: Namespace '${NAMESPACE}' is applied from namespaces/namespace-machine-monitoring.yaml"
 
 # Step 1: Install Strimzi Cluster Operator
 echo ""
@@ -92,8 +94,8 @@ echo "Step 2: Deploying Kafka cluster..."
 echo "==================================="
 cd "${KAFKA_DIR}"
 
-# Ensure namespace exists
-kubectl create namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+# Ensure namespace exists (with labels from git manifest)
+kubectl apply -f "${NAMESPACE_MANIFEST}"
 
 # Check if storage class exists (required for persistent volumes)
 STORAGE_CLASS="local-path"
