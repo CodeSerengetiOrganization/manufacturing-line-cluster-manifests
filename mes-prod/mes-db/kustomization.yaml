@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: mes-prod
+resources:
+  - mysql-deployment.yaml
+  - mysql-service.yaml
+commonLabels:
+  app.kubernetes.io/part-of: mes
+  app.kubernetes.io/component: mes-db

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mes-mysql
+  labels:
+    app.kubernetes.io/name: mes-mysql
+    app.kubernetes.io/part-of: mes
+    app.kubernetes.io/component: mes-db
+spec:
+  selector:
+    app: mes-mysql
+  ports:
+    - port: 3306
+      targetPort: 3306

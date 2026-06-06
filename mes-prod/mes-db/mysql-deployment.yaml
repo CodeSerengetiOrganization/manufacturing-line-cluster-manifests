@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mes-mysql
+  labels:
+    app.kubernetes.io/name: mes-mysql
+    app.kubernetes.io/part-of: mes
+    app.kubernetes.io/component: mes-db
+spec:
+  selector:
+    matchLabels:
+      app: mes-mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mes-mysql
+        app.kubernetes.io/part-of: mes
+        app.kubernetes.io/component: mes-db
+    spec:
+      containers:
+        - name: mes-mysql
+          image: mysql:8.0.21
+          ports:
+            - containerPort: 3306
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mes-mysql-secret
+                  key: mysql-root-password
+          volumeMounts:
+            - name: mes-mysql-storage
+              mountPath: /var/lib/mysql
+            - name: mes-mysql-initdb-volume
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mes-mysql-storage
+          emptyDir: {}
+        - name: mes-mysql-initdb-volume
+          configMap:
+            name: mes-mysql-initdb-config
+            items:
+              - key: mysql-init.sql
+                path: mysql-init.sql
