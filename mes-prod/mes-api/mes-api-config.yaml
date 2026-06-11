@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mes-api-config
+  labels:
+    app.kubernetes.io/name: mes-api
+    app.kubernetes.io/part-of: mes
+    app.kubernetes.io/component: mes-api
+data:
+  SPRING_PROFILES_ACTIVE: dev
+  SPRING_DATASOURCE_URL: jdbc:mysql://mes-mysql:3306/mes_db?serverTimezone=UTC
+  KAFKA_BOOTSTRAP_SERVERS: kafka-kafka-bootstrap.machine-monitoring.svc.cluster.local:9092
+  KAFKA_CONSUMER_GROUP_ID: mes-api

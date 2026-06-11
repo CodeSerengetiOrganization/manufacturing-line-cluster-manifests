@@ -16,3 +16,5 @@ mms-backend-email-secret.yaml
 mms-backend-db-secret.yaml
 mysql-secret.yaml
 mes-prod/mes-db/mes-mysql-secret.yaml
+mes-prod/mes-api/mes-api-db-secret.yaml
+mes-prod/mes-api/mes-api-ghcr-secret.yaml
